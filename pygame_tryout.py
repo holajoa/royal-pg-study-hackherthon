@@ -54,7 +54,7 @@ def draw():
 
 
 def click():
-    global w_turn, b_turn
+    global w_turn, b_turn, count, ans_chars
 
     m_x, m_y = pygame.mouse.get_pos()
 
@@ -63,23 +63,35 @@ def click():
             x, y, b = bin
             dist = sqrt((x - m_x)**2 + (y - m_y)**2)
             if dist <= RADIUS:
-                print(b)
-                w_turn, b_turn = True, False
-                break
+                if b in ans_chars:
+                    print('Already paired - choose another bin!')
+                    break
+                else:
+                    ans_chars.append(b)
+                    w_turn, b_turn = True, False
+                    count += 1
+                    break
         return
     if w_turn:
         for waste in wastes:
             x, y, w = waste
             dist = sqrt((x - m_x)**2 + (y - m_y)**2)
             if dist <= RADIUS:
-                print(w)
-                b_turn, w_turn = True, False
-                break
+                if w in ans_chars:
+                    print('Already paired - choose another waste!')
+                    break
+                else:
+                    ans_chars.append(w)
+                    b_turn, w_turn = True, False
+                    count += 1
+                    break
         return
 
 
-global b_turn, w_turn
+global b_turn, w_turn, count
 b_turn, w_turn = False, True
+count = 0
+ans_chars = []
 
 while run:
 
@@ -95,6 +107,9 @@ while run:
 
         if event.type == pygame.MOUSEBUTTONDOWN:
             click()
+            print(ans_chars)
+            if count >= 8:
+                print('All pairs complete. End.')
 
 
 pygame.quit()
