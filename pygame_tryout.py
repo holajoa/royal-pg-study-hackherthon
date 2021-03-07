@@ -8,7 +8,8 @@ from numpy.random import permutation
 pygame.init()
 WIDTH, HEIGHT = 800, 500
 win = pygame.display.set_mode((WIDTH, HEIGHT))
-# #pygame.caption('Categorising waste!')
+empty_surface = pygame.Surface((WIDTH, HEIGHT))
+pygame.display.set_caption('Categorising waste!')
 
 # button variables
 RADIUS = 28
@@ -25,7 +26,9 @@ def load_images():
         bin_image = pygame.image.load(os.path.join('bins', str(i)+'.png'))
         bin_images.append(bin_image)
         rnd_num = rnd.randint(1, stock[i])
-        waste_image = pygame.image.load(os.path.join('trash', i+'_'+str(rnd_num)+'.png'))
+        waste_image = pygame.image.load(
+            os.path.join('trash', i+'_'+str(rnd_num)+'.png')
+        )
         waste_images.append(waste_image)
     return waste_images, bin_images, perm
 
@@ -41,6 +44,7 @@ ans_chars = []
 # colours
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
+BLUE = 0, 0, 255
 
 
 # setup game loop
@@ -74,9 +78,11 @@ def draw():
         win.blit(waste_images[i], (160+150*perm[i], 120))
         pygame.draw.circle(win, WHITE, (180+150*perm[i], 140), RADIUS, 3)
         wastes.append([180+150*perm[i], 140, str(i+1)])
-    
+
     # display bin text
-    for e, i in enumerate(['Hazardous Waste', 'Recyclable Waste', 'Food Waste', 'Residual Waste']):
+    for e, i in enumerate(
+        ['Hazardous Waste', 'Recyclable Waste', 'Food Waste', 'Residual Waste']
+    ):
         text = BIN_FONT.render(i, 1, BLACK)
         if e == 0 or e == 1:
             win.blit(text, (135+150*e, 360))
@@ -90,25 +96,12 @@ def click():
     global w_turn, b_turn, count, ans_chars
 
     m_x, m_y = pygame.mouse.get_pos()
+    global x_w, y_w
 
-    if b_turn:
-        for bin in bins:
-            x, y, b = bin
-            dist = sqrt((x - m_x)**2 + (y - m_y)**2)
-            if dist <= RADIUS:
-                if b in ans_chars:
-                    print('Already paired - choose another bin!')
-                    break
-                else:
-                    ans_chars.append(b)
-                    w_turn, b_turn = True, False
-                    count += 1
-                    break
-        return
     if w_turn:
         for waste in wastes:
-            x, y, w = waste
-            dist = sqrt((x - m_x)**2 + (y - m_y)**2)
+            x_w, y_w, w = waste
+            dist = sqrt((x_w - m_x)**2 + (y_w - m_y)**2)
             if dist <= RADIUS:
                 if w in ans_chars:
                     print('Already paired - choose another waste!')
@@ -120,15 +113,31 @@ def click():
                     break
         return
 
+    if b_turn:
+        for bin in bins:
+            x, y, b = bin
+            dist = sqrt((x - m_x)**2 + (y - m_y)**2)
+            if dist <= RADIUS:
+                if b in ans_chars:
+                    print('Already paired - choose another bin!')
+                    break
+                else:
+                    ans_chars.append(b)
+                    print((x_w, y_w), (x, y))
+                    pygame.draw.line(win, BLACK, (x_w, y_w), (x, y))
+                    w_turn, b_turn = True, False
+                    count += 1
+                    break
+        return
+
 
 # main routine
 waste_images, bin_images, perm = load_images()
+draw()
 
 while run:
 
     clock.tick(FPS)
-
-    draw()
 
     # Loop through all events
     for event in pygame.event.get():
@@ -139,7 +148,7 @@ while run:
         if event.type == pygame.MOUSEBUTTONDOWN:
             # Initialise bins, wastes and solution pairs
             bins_ = [bin_[-1] for bin_ in bins[:4]]
-            wastes_in_order = [waste_[-1] for waste_ in wastes[:4]]  # in some order
+            wastes_in_order = [waste_[-1] for waste_ in wastes[:4]]
             solution = [[], [], [], []]
             for i in range(4):
                 solution[i].append(wastes_in_order[i])
@@ -147,17 +156,26 @@ while run:
             print(solution)
 
             click()
+            pygame.display.update()
+
             print('current decisions:', ans_chars)
-            print('solutions:', solution)
+            # print('solutions:', solution)
             if count == 8:
                 print('------------------All pairs complete------------------')
-                ans_pairs = [[ans_chars[2*k], ans_chars[2*k+1]] for k in range(4)]
+                ans_pairs = [[ans_chars[2*k], ans_chars[2*k+1]]
+                             for k in range(4)]
                 if sorted(ans_pairs) == sorted(solution):
                     print('All correct - well done!')
+                    text = 'All correct - well done!💯'
+                    text = FONT.render(text, 1, BLACK)
+                    win.blit(text, (300, 200))
+                    pygame.display.update()
+                    draw()
                 else:
                     print('Some are mismatched - please try again:(')
+                    draw()
                 count = 0
                 ans_chars = []
-                waste_images, bin_images, perm = load_images()
+
 
 pygame.quit()
