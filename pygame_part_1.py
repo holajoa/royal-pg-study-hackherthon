@@ -94,7 +94,7 @@ def game_intro():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-                quit()
+
         
             # button event
             but.event_handler(event)
@@ -115,18 +115,21 @@ def button(image,x,y,action=None):
             action() 
 
 def choose_game():
-    draw()
-    CHOICE = 'Which Game Do You Want To Play?'
-    win.blit(ques_font.render(CHOICE, 1, BLACK), (100, 295))
-    pygame.display.flip()
+    choose = True
+    while choose == True:
+        draw()
+        CHOICE = 'Which Game Do You Want To Play?'
+        win.blit(ques_font.render(CHOICE, 1, BLACK), (100, 295))
+        pygame.display.update()
+        clock.tick(15)
 
 def questions(i):
     draw()
     ques = ques_font.render(QUES[i], 1, BLACK)
     win.blit(ques, (100, 295))
-    pygame.display.flip()
+    pygame.display.update()
 
-game_intro()
+
 while run:
     clock.tick(FPS)
     for event in pygame.event.get():
@@ -136,6 +139,6 @@ while run:
             if event.key == pygame.K_ESCAPE:
                 inPlay = False
 
-    
+    game_intro()
     choose_game()
 pygame.quit()
