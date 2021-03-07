@@ -98,13 +98,6 @@ while run:
 
     draw()
 
-    # Initialise bins, wastes and solution pairs
-    bins_ = [bin_[-1] for bin_ in bins[:4]]
-    wastes_in_order = [waste_[-1] for waste_ in wastes[:4]]  # in some order
-    solution = []
-    for i in range(4):
-        solution.append(wastes_in_order[i])
-        solution.append(bins_[i])
 
     # Loop through all events
     for event in pygame.event.get():
@@ -113,15 +106,26 @@ while run:
             run = False
 
         if event.type == pygame.MOUSEBUTTONDOWN:
+            # Initialise bins, wastes and solution pairs
+            bins_ = [bin_[-1] for bin_ in bins[:4]]
+            wastes_in_order = [waste_[-1] for waste_ in wastes[:4]]  # in some order
+            solution = [[], [], [], []]
+            for i in range(4):
+                solution[i].append(wastes_in_order[i])
+                solution[i].append(bins_[i])
+
             click()
             print('current decisions:', ans_chars)
             # print('solutions:', solution)
-            if count >= 8:
+            if count == 8:
                 print('------------------All pairs complete------------------')
-                if ans_chars == solution:
+                ans_pairs = [[ans_chars[2*k], ans_chars[2*k+1]] for k in range(4)]
+                if sorted(ans_pairs) == sorted(solution):
                     print('All correct - well done!')
                 else:
                     print('Some are mismatched - please try again:(')
+                count = 0
+                ans_chars = []
 
 
 pygame.quit()
