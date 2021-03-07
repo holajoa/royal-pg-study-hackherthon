@@ -124,7 +124,6 @@ def click():
                     break
                 else:
                     ans_chars.append(b)
-                    print((x_w, y_w), (x, y))
                     pygame.draw.line(win, BLACK, (x_w, y_w), (x, y))
                     w_turn, b_turn = True, False
                     count += 1
@@ -154,12 +153,11 @@ while run:
             for i in range(4):
                 solution[i].append(wastes_in_order[i])
                 solution[i].append(bins_[i])
-            print(solution)
 
             click()
             pygame.display.update()
 
-            print('current decisions:', ans_chars)
+            # print('current decisions:', ans_chars)
             # print('solutions:', solution)
             if count == 8:
                 print('------------------All pairs complete------------------')
