@@ -33,18 +33,18 @@ class Button(object):
 
 # setup display
 
+
 pygame.init()
 WIDTH, HEIGHT = 800, 500
 win = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("The RUBBISH Game")
 
 
-
 # load images
 TP = pygame.transform.scale(pygame.image.load("titlepage.png"),
-    (800, 500))
+        (800, 500))
 BG = pygame.transform.scale(pygame.image.load("bg.png"),
-    (800, 500))
+        (800, 500))
 
 # list of categories
 CATS = ['Hazardous waste',
@@ -71,6 +71,7 @@ FPS = 60
 clock = pygame.time.Clock()
 run = True
 
+
 def draw():
     # draw the background
     win.blit(BG, (0, 0))
@@ -88,7 +89,7 @@ def game_intro():
 
         # draw button
         start = pygame.image.load(os.path.join('buttons', '1.png'))
-        but = Button(start, (40, 320), (220, 160))
+        but = Button(start, (40, 320), (220, 160), choose_game)
         but.draw(win)
 
         for event in pygame.event.get():
@@ -126,6 +127,7 @@ def questions(i):
     win.blit(ques, (100, 295))
     pygame.display.flip()
 
+game_intro()
 while run:
     clock.tick(FPS)
     for event in pygame.event.get():
@@ -135,7 +137,6 @@ while run:
             if event.key == pygame.K_ESCAPE:
                 inPlay = False
 
-    game_intro()
     choose_game()
-pygame.quit()
 
+pygame.quit()
