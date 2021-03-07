@@ -1,6 +1,7 @@
 import pygame
 import os
 from math import sqrt
+import random as rnd
 
 # setup display
 pygame.init()
@@ -12,12 +13,14 @@ win = pygame.display.set_mode((WIDTH, HEIGHT))
 RADIUS = 28
 
 
-# load images
+# load images, generate random image
 bin_images, waste_images = [], []
-for i in range(1, 5):
+stock = {'A': 5, 'B': 7, 'C': 6, 'D': 3}  # number of images for each bin
+for i in ['A', 'B', 'C', 'D']:
     bin_image = pygame.image.load(os.path.join('bins', str(i)+'.png'))
     bin_images.append(bin_image)
-    waste_image = pygame.image.load(os.path.join('trash', str(i)+'.png'))
+    rnd_num = rnd.randint(1, stock[i])
+    waste_image = pygame.image.load(os.path.join('trash', i+'_'+str(rnd_num)+'.png'))
     waste_images.append(waste_image)
 
 
@@ -34,6 +37,7 @@ BLACK = (0, 0, 0)
 FPS = 60
 clock = pygame.time.Clock()
 run = True
+
 
 
 def draw():
@@ -113,6 +117,7 @@ while run:
             for i in range(4):
                 solution[i].append(wastes_in_order[i])
                 solution[i].append(bins_[i])
+            print(solution)
 
             click()
             print('current decisions:', ans_chars)
