@@ -308,7 +308,7 @@ def help2():
                 if event.type == pygame.QUIT:
                     pygame.quit()
 
-        help2 = pygame.image.load(os.path.join('waste_ppt', 'recyclable_wast.png'))
+        help2 = pygame.image.load(os.path.join('waste_ppt', 'recyclable_waste.png'))
         help2 = pygame.transform.scale(help2, (800, 500))
         win.blit(help2, (0, 0))
         pygame.display.update()
