@@ -2,6 +2,7 @@ import pygame
 import os
 from math import sqrt
 import random as rnd
+from numpy.random import permutation
 
 # setup display
 pygame.init()
@@ -16,17 +17,26 @@ RADIUS = 28
 # load images, generate random image
 bin_images, waste_images = [], []
 stock = {'A': 5, 'B': 7, 'C': 6, 'D': 3}  # number of images for each bin
-for i in ['A', 'B', 'C', 'D']:
-    bin_image = pygame.image.load(os.path.join('bins', str(i)+'.png'))
-    bin_images.append(bin_image)
-    rnd_num = rnd.randint(1, stock[i])
-    waste_image = pygame.image.load(os.path.join('trash', i+'_'+str(rnd_num)+'.png'))
-    waste_images.append(waste_image)
+
+
+def load_images():
+    perm = permutation(list(range(4)))
+    for i in ['A', 'B', 'C', 'D']:
+        bin_image = pygame.image.load(os.path.join('bins', str(i)+'.png'))
+        bin_images.append(bin_image)
+        rnd_num = rnd.randint(1, stock[i])
+        waste_image = pygame.image.load(os.path.join('trash', i+'_'+str(rnd_num)+'.png'))
+        waste_images.append(waste_image)
+    return waste_images, bin_images, perm
 
 
 # game variables
+global b_turn, w_turn, count, perm
 wastes = []
 bins = []
+b_turn, w_turn = False, True
+count = 0
+ans_chars = []
 
 # colours
 WHITE = (255, 255, 255)
@@ -39,19 +49,20 @@ clock = pygame.time.Clock()
 run = True
 
 
-
 def draw():
+    global perm
     win.fill(WHITE)
 
     # draw buttons
+
     for i in range(4):
         win.blit(bin_images[i], (160+150*i, 300))
         pygame.draw.circle(win, WHITE, (180+150*i, 325), RADIUS, 3)
         bins.append([180+150*i, 325, str(chr(i+65))])
 
-        win.blit(waste_images[i], (160+150*i, 100))
-        pygame.draw.circle(win, WHITE, (180+150*i, 120), RADIUS, 3)
-        wastes.append([180+150*i, 120, str(i+1)])
+        win.blit(waste_images[i], (160+150*perm[i], 100))
+        pygame.draw.circle(win, WHITE, (180+150*perm[i], 120), RADIUS, 3)
+        wastes.append([180+150*perm[i], 120, str(i+1)])
 
     pygame.display.update()
 
@@ -91,17 +102,14 @@ def click():
         return
 
 
-global b_turn, w_turn, count
-b_turn, w_turn = False, True
-count = 0
-ans_chars = []
+# main routine
+waste_images, bin_images, perm = load_images()
 
 while run:
 
     clock.tick(FPS)
 
     draw()
-
 
     # Loop through all events
     for event in pygame.event.get():
@@ -121,7 +129,7 @@ while run:
 
             click()
             print('current decisions:', ans_chars)
-            # print('solutions:', solution)
+            print('solutions:', solution)
             if count == 8:
                 print('------------------All pairs complete------------------')
                 ans_pairs = [[ans_chars[2*k], ans_chars[2*k+1]] for k in range(4)]
@@ -131,6 +139,6 @@ while run:
                     print('Some are mismatched - please try again:(')
                 count = 0
                 ans_chars = []
-
+                waste_images, bin_images, perm = load_images()
 
 pygame.quit()
