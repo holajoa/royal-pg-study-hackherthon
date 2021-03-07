@@ -17,7 +17,7 @@ RADIUS = 28
 
 # load images, generate random image
 bin_images, waste_images = [], []
-stock = {'A': 5, 'B': 7, 'C': 6, 'D': 3}  # number of images for each bin
+stock = {'A': 5, 'B': 6, 'C': 7, 'D': 3}  # number of images for each bin
 
 
 def load_images():
@@ -53,9 +53,19 @@ clock = pygame.time.Clock()
 run = True
 
 
+# text variable
+FONT = pygame.font.SysFont('comicsans', 24)
+BIN_FONT = pygame.font.SysFont('comicsans', 16)
+
+
 def draw():
     global perm
     win.fill(WHITE)
+
+    # display text
+    text = 'Click a piece of waste first, and match it with the right bin'
+    text = FONT.render(text, 1, BLACK)
+    win.blit(text, (190, 50))
 
     # draw buttons
 
@@ -64,9 +74,18 @@ def draw():
         pygame.draw.circle(win, WHITE, (180+150*i, 325), RADIUS, 3)
         bins.append([180+150*i, 325, str(chr(i+65))])
 
-        win.blit(waste_images[i], (160+150*perm[i], 100))
-        pygame.draw.circle(win, WHITE, (180+150*perm[i], 120), RADIUS, 3)
-        wastes.append([180+150*perm[i], 120, str(i+1)])
+    # increased y-coordinate by 20
+        win.blit(waste_images[i], (160+150*perm[i], 120))
+        pygame.draw.circle(win, WHITE, (180+150*perm[i], 140), RADIUS, 3)
+        wastes.append([180+150*perm[i], 140, str(i+1)])
+    
+    # display bin text
+    for e, i in enumerate(['Hazardous Waste', 'Recyclable Waste', 'Food Waste', 'Residual Waste']):
+        text = BIN_FONT.render(i, 1, BLACK)
+        if e == 0 or e == 1:
+            win.blit(text, (135+150*e, 360))
+        else:
+            win.blit(text, (145+150*e, 360))
 
     pygame.display.update()
 
