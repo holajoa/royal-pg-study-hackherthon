@@ -6,7 +6,7 @@ import os
 
 class Button(object):
 
-    def __init__(self, image, position, size, action = None):
+    def __init__(self, image, position, size, action=None):
 
         # create images
         self._images = pygame.transform.scale(image, size)
