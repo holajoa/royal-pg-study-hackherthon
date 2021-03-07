@@ -8,7 +8,6 @@ WIDTH, HEIGHT = 800, 500
 win = pygame.display.set_mode((WIDTH, HEIGHT))
 # #pygame.caption('Categorising waste!')
 
-
 # button variables
 RADIUS = 28
 
@@ -17,6 +16,7 @@ RADIUS = 28
 bin_images, waste_images = [], []
 for i in range(1, 5):
     bin_image = pygame.image.load(os.path.join('bins', str(i)+'.png'))
+    # bin_image = pygame.image.load('bins/', str(i), '.png')
     bin_images.append(bin_image)
     waste_image = pygame.image.load(os.path.join('trash', str(i)+'.png'))
     waste_images.append(waste_image)
@@ -58,30 +58,34 @@ def click():
 
     m_x, m_y = pygame.mouse.get_pos()
 
-    if w_turn:
+    if b_turn:
         for bin in bins:
             x, y, b = bin
             dist = sqrt((x - m_x)**2 + (y - m_y)**2)
             if dist <= RADIUS:
                 print(b)
-        w_turn, b_turn = False, True
-    if b_turn:
+                break
+        w_turn, b_turn = True, False
+    if w_turn:
         for waste in wastes:
             x, y, w = waste
             dist = sqrt((x - m_x)**2 + (y - m_y)**2)
             if dist <= RADIUS:
                 print(w)
-        b_turn, w_turn = False, True
+                break
+        b_turn, w_turn = True, False
 
 
+global b_turn, w_turn
+b_turn, w_turn = False, True
 while run:
-    global b_turn, w_turn
+    # global b_turn, w_turn
 
     clock.tick(FPS)
 
     draw()
 
-    b_turn, w_turn = False, True
+    # b_turn, w_turn = False, True
 
     # Loop through all events
     for event in pygame.event.get():
