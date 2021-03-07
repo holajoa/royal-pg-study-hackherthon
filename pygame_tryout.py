@@ -78,9 +78,11 @@ def draw():
         win.blit(waste_images[i], (160+150*perm[i], 120))
         pygame.draw.circle(win, WHITE, (180+150*perm[i], 140), RADIUS, 3)
         wastes.append([180+150*perm[i], 140, str(i+1)])
-    
+
     # display bin text
-    for e, i in enumerate(['Hazardous Waste', 'Recyclable Waste', 'Food Waste', 'Residual Waste']):
+    for e, i in enumerate(
+        ['Hazardous Waste', 'Recyclable Waste', 'Food Waste', 'Residual Waste']
+    ):
         text = BIN_FONT.render(i, 1, BLACK)
         if e == 0 or e == 1:
             win.blit(text, (135+150*e, 360))
@@ -167,8 +169,9 @@ while run:
                     draw()
                 else:
                     print('Some are mismatched - please try again:(')
-                    count = 0
-                    ans_chars = []
                     draw()
+                count = 0
+                ans_chars = []
+
 
 pygame.quit()
