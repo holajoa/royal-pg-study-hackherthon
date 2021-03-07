@@ -166,6 +166,10 @@ while run:
                              for k in range(4)]
                 if sorted(ans_pairs) == sorted(solution):
                     print('All correct - well done!')
+                    text = 'All correct - well done!💯'
+                    text = FONT.render(text, 1, BLACK)
+                    win.blit(text, (300, 200))
+                    pygame.display.update()
                     draw()
                 else:
                     print('Some are mismatched - please try again:(')
