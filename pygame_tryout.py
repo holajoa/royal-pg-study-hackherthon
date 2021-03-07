@@ -16,7 +16,6 @@ RADIUS = 28
 bin_images, waste_images = [], []
 for i in range(1, 5):
     bin_image = pygame.image.load(os.path.join('bins', str(i)+'.png'))
-    # bin_image = pygame.image.load('bins/', str(i), '.png')
     bin_images.append(bin_image)
     waste_image = pygame.image.load(os.path.join('trash', str(i)+'.png'))
     waste_images.append(waste_image)
@@ -99,6 +98,14 @@ while run:
 
     draw()
 
+    # Initialise bins, wastes and solution pairs
+    bins_ = [bin_[-1] for bin_ in bins[:4]]
+    wastes_in_order = [waste_[-1] for waste_ in wastes[:4]]  # in some order
+    solution = []
+    for i in range(4):
+        solution.append(wastes_in_order[i])
+        solution.append(bins_[i])
+
     # Loop through all events
     for event in pygame.event.get():
 
@@ -107,9 +114,14 @@ while run:
 
         if event.type == pygame.MOUSEBUTTONDOWN:
             click()
-            print(ans_chars)
+            print('current decisions:', ans_chars)
+            # print('solutions:', solution)
             if count >= 8:
-                print('All pairs complete. End.')
+                print('------------------All pairs complete------------------')
+                if ans_chars == solution:
+                    print('All correct - well done!')
+                else:
+                    print('Some are mismatched - please try again:(')
 
 
 pygame.quit()
