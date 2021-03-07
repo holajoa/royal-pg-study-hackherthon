@@ -43,21 +43,45 @@ def draw():
     # draw buttons
     for i in range(4):
         win.blit(bin_images[i], (160+150*i, 300))
-        pygame.draw.circle(win, BLACK, (180+150*i, 325), RADIUS, 3)
+        pygame.draw.circle(win, WHITE, (180+150*i, 325), RADIUS, 3)
         bins.append([180+150*i, 325, str(chr(i+65))])
 
         win.blit(waste_images[i], (160+150*i, 100))
-        pygame.draw.circle(win, BLACK, (180+150*i, 120), RADIUS, 3)
+        pygame.draw.circle(win, WHITE, (180+150*i, 120), RADIUS, 3)
         wastes.append([180+150*i, 120, str(i+1)])
 
     pygame.display.update()
 
 
+def click():
+    global w_turn, b_turn
+
+    m_x, m_y = pygame.mouse.get_pos()
+
+    if w_turn:
+        for bin in bins:
+            x, y, b = bin
+            dist = sqrt((x - m_x)**2 + (y - m_y)**2)
+            if dist <= RADIUS:
+                print(b)
+        w_turn, b_turn = False, True
+    if b_turn:
+        for waste in wastes:
+            x, y, w = waste
+            dist = sqrt((x - m_x)**2 + (y - m_y)**2)
+            if dist <= RADIUS:
+                print(w)
+        b_turn, w_turn = False, True
+
+
 while run:
+    global b_turn, w_turn
 
     clock.tick(FPS)
 
     draw()
+
+    b_turn, w_turn = False, True
 
     # Loop through all events
     for event in pygame.event.get():
@@ -66,25 +90,7 @@ while run:
             run = False
 
         if event.type == pygame.MOUSEBUTTONDOWN:
-            count = 0
-            print(f'count={count}')
-            m_x, m_y = pygame.mouse.get_pos()
-
-            if count % 2 == 1:
-                for bin in bins:
-                    x, y, b = bin
-                    dist = sqrt((x - m_x)**2 + (y - m_y)**2)
-                    if dist <= RADIUS:
-                        print(b)
-
-            elif count % 2 == 0:
-                for waste in wastes:
-                    x, y, w = waste
-                    dist = sqrt((x - m_x)**2 + (y - m_y)**2)
-                    if dist <= RADIUS:
-                        print(w)
-            count += 1
-            print(f'count={count}')
+            click()
 
 
 pygame.quit()
