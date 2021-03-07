@@ -44,7 +44,7 @@ ans_chars = []
 # colours
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
-BLUE = 0, 0, 255
+BLUE = (10, 0, 200)
 
 
 # setup game loop
@@ -166,13 +166,20 @@ while run:
                              for k in range(4)]
                 if sorted(ans_pairs) == sorted(solution):
                     print('All correct - well done!')
-                    text = 'All correct - well done!💯'
+                    # rect1 = pygame.Rect(280, 190, 100, 30)
+                    # rect1.fill(BLUE)
+                    text = 'All correct - well done!'
+                    text = FONT.render(text, 1, WHITE)
+                    win.blit(text, (300, 200))
+                    pygame.display.update()
+                    # break
+                    # draw()
+                else:
+                    print('Some are mismatched - please try again:(')
+                    text = 'Some are mismatched - please try again:('
                     text = FONT.render(text, 1, BLACK)
                     win.blit(text, (300, 200))
                     pygame.display.update()
-                    draw()
-                else:
-                    print('Some are mismatched - please try again:(')
                     draw()
                 count = 0
                 ans_chars = []
