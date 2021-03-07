@@ -3,6 +3,7 @@ import os
 from math import sqrt
 import random as rnd
 from numpy.random import permutation
+import time
 
 # setup display
 pygame.init()
@@ -44,7 +45,7 @@ ans_chars = []
 # colours
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
-BLUE = (10, 0, 200)
+BLUE = (0, 62, 112)
 
 
 # setup game loop
@@ -123,7 +124,6 @@ def click():
                     break
                 else:
                     ans_chars.append(b)
-                    print((x_w, y_w), (x, y))
                     pygame.draw.line(win, BLACK, (x_w, y_w), (x, y))
                     w_turn, b_turn = True, False
                     count += 1
@@ -153,12 +153,11 @@ while run:
             for i in range(4):
                 solution[i].append(wastes_in_order[i])
                 solution[i].append(bins_[i])
-            print(solution)
 
             click()
             pygame.display.update()
 
-            print('current decisions:', ans_chars)
+            # print('current decisions:', ans_chars)
             # print('solutions:', solution)
             if count == 8:
                 print('------------------All pairs complete------------------')
@@ -169,17 +168,22 @@ while run:
                     # rect1 = pygame.Rect(280, 190, 100, 30)
                     # rect1.fill(BLUE)
                     text = 'All correct - well done!'
+                    rect1 = pygame.Rect(290, 190, 200, 30)
+                    pygame.draw.rect(win, BLUE, rect1)
                     text = FONT.render(text, 1, WHITE)
                     win.blit(text, (300, 200))
                     pygame.display.update()
-                    # break
+                    continue
                     # draw()
                 else:
                     print('Some are mismatched - please try again:(')
                     text = 'Some are mismatched - please try again:('
-                    text = FONT.render(text, 1, BLACK)
+                    rect2 = pygame.Rect(290, 195, 350, 30)
+                    pygame.draw.rect(win, BLUE, rect2)
+                    text = FONT.render(text, 1, WHITE)
                     win.blit(text, (300, 200))
                     pygame.display.update()
+                    time.sleep(3)
                     draw()
                 count = 0
                 ans_chars = []
