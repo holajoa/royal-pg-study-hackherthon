@@ -64,28 +64,28 @@ def click():
             dist = sqrt((x - m_x)**2 + (y - m_y)**2)
             if dist <= RADIUS:
                 print(b)
+                w_turn, b_turn = True, False
                 break
-        w_turn, b_turn = True, False
+        return
     if w_turn:
         for waste in wastes:
             x, y, w = waste
             dist = sqrt((x - m_x)**2 + (y - m_y)**2)
             if dist <= RADIUS:
                 print(w)
+                b_turn, w_turn = True, False
                 break
-        b_turn, w_turn = True, False
+        return
 
 
 global b_turn, w_turn
 b_turn, w_turn = False, True
+
 while run:
-    # global b_turn, w_turn
 
     clock.tick(FPS)
 
     draw()
-
-    # b_turn, w_turn = False, True
 
     # Loop through all events
     for event in pygame.event.get():
